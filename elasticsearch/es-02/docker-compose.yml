@@ -1,0 +1,29 @@
+version: '3'
+services:
+  es-node1:
+    image: elasticsearch:7.7.0
+    container_name: es-node02
+    environment:
+      - TZ="Asia/Shanghai"
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - /data/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - /data/elasticsearch/config/elastic-certificates.p12:/usr/share/elasticsearch/config/elastic-certificates.p12:ro
+      - /data/elasticsearch/config/elastic-stack-ca.p12:/usr/share/elasticsearch/config/elastic-stack-ca.p12:ro
+      - /data/elasticsearch/data:/usr/share/elasticsearch/data:rw
+      - /data/elasticsearch/logs:/usr/share/elasticsearch/logs:rw
+      - /data/elasticsearch/plugins:/usr/share/elasticsearch/plugins:rw
+    ports:
+      - 9200:9200
+      - 9300:9300
+    extra_hosts:                        # 设置容器 hosts
+      - "es-node01:192.168.1.111"
+      - "es-node02:192.168.1.112"
+      - "es-node03:192.168.1.113"
